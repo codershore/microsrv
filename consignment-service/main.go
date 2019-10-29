@@ -48,6 +48,7 @@ type service struct {
 //as an argument, these are handled by the gRPC server.
 func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
 	consignment, err := s.repo.Create(req)
+
 	if err != nil {
 		return err
 	}
