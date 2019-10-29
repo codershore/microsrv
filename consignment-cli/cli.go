@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	pb "microsrv/consignment-service/proto/consignment"
 	"os"
+
+	pb "github.com/codershore/microsrv/consignment-service/proto/consignment"
 
 	"google.golang.org/grpc"
 )
