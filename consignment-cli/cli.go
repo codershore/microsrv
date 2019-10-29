@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	pb "micorsrv/consignment-service/proto/consignment"
+	pb "github.com/codershore/micorsrv/consignment-service/proto/consignment"
 
 	micro "github.com/micro/go-micro"
 

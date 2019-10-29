@@ -17,6 +17,7 @@ const (
 type repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
 	GetAll() []*pb.Consignment
+	
 }
 
 //Repository - Dummy repository.
