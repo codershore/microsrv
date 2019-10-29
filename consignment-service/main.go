@@ -67,7 +67,7 @@ func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *
 
 func main() {
 
-	// repo := &Repository{}
+	repo := &Repository{}
 
 	//Create a new service.
 	srv := micro.NewService(
@@ -79,7 +79,7 @@ func main() {
 	//Register our service with the gRPC server, this will tie
 	//our implementation into the auto-generated interface
 	//for our protobuf definition
-	// pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
 
 	if err := srv.Run(); err != nil {
 		log.Fatalf("failed to serve: %v", err)
