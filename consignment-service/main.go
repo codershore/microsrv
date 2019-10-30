@@ -71,7 +71,7 @@ func main() {
 
 	//Create a new service.
 	srv := micro.NewService(
-		micro.Name("shippy.service.consignment"),
+		micro.Name("consignment"),
 	)
 
 	srv.Init()
