@@ -6,13 +6,14 @@ import (
 	"sync"
 
 	pb "github.com/codershore/microsrv/consignment-service/proto/consignment"
+	vesselProto "github.com/codershore/microsrv/vessel-service/proto/vessel"
 
 	"github.com/micro/go-micro"
 )
 
-const (
-	port = ":50051"
-)
+//const (
+//	port = ":50051"
+//)
 
 type repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
