@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"sync"
 
@@ -42,14 +43,25 @@ func (repo *Repository) GetAll() []*pb.Consignment {
 
 type service struct {
 	repo repository
+	vesselCient vesselProto.VesselServiceClient
 }
 
 //CreateConsignment - we created just on method on our service,
 //Which is a create method, which takes a context and a request
 //as an argument, these are handled by the gRPC server.
 func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
-	consignment, err := s.repo.Create(req)
+	vesselResponse, err := s.vesselCient.FindAvailable(context.Background(), &vesselProto.Specification{
+		Capacity:             int32(len(req.Container)),
+		MaxWeight:            req.Weight,
+	})
+	log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
+	if err != nil {
+		return err
+	}
 
+	req.VesselId = vesselResponse.Vessel.Id
+
+	consignment, err := s.repo.Create(req)
 	if err != nil {
 		return err
 	}
@@ -57,7 +69,6 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
 	res.Created = true
 	res.Consignment = consignment
 	return nil
-
 }
 
 func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
@@ -73,17 +84,17 @@ func main() {
 	//Create a new service.
 	srv := micro.NewService(
 		micro.Name("consignment"),
+		micro.Version("latest"),
 	)
 
+	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
 	srv.Init()
 
-	//Register our service with the gRPC server, this will tie
-	//our implementation into the auto-generated interface
-	//for our protobuf definition
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{repo, vesselClient})
 
 	if err := srv.Run(); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		fmt.Println(err)
 	}
+
 
 }

@@ -9,7 +9,7 @@ import (
 )
 
 
-type Repository Interface {
+type Repository interface {
 	FindAvailable(*pb.Specification) (*pb.Vessel, error)
 }
 
@@ -39,7 +39,7 @@ func (s *service) FindAvailable(ctx context.Context, req *pb.Specification, res 
 }
 func main()  {
 	vessels := []*pb.Vessel{
-		&pb.Vessel{Id: "vessel001", Name: "Boaty McBoatFace", MaxWeight: 200000, Capacity: 5000}
+		&pb.Vessel{Id: "vessel001", Name: "Boaty McBoatFace", MaxWeight: 200000, Capacity: 5000},
 	}
 	repo := &VesselRepository{vessels}
 
