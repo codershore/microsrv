@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	pb "github.com/codershore/microsrv/vessel-service/proto/vessel"
+	"github.com/micro/go-micro"
+	"log"
 	"os"
 )
 
@@ -26,4 +29,25 @@ func main()  {
 	}
 
 	session, err := CreateSession(host)
+	defer session.Close()
+
+	if err != nil {
+		log.Fatal("Error connecting to datastore: %v", err)
+	}
+
+	repo := &VesselRepository{session.Copy()}
+
+	createDummyData(repo)
+
+	srv := micro.NewService(
+		micro.Name("go.micro.srv.vessel"),
+		micro.Version("latest"),
+		)
+	srv.Init()
+
+	pb.RegisterVesselServiceHandler(srv.Server(), &service{session})
+
+	if err := srv.Run(); err != nil {
+		fmt.Println(err)
+	}
 }
