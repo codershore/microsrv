@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	pb "github.com/codershore/microsrv/consignment-service/proto/consignment"
-	vesselProto "github.com/codershore/microsrv/vessel-service/proto/vessel"
 	micro "github.com/micro/go-micro"
 	"log"
 	"os"
@@ -30,11 +29,10 @@ func main()  {
 		micro.Name("consignment"),
 		micro.Version("latest"),
 	)
-	vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
 
 	srv.Init()
 
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{session, vesselClient})
+	pb.RegisterShippingServiceHandler(srv.Server(), &service{session})
 
 	//Run the server
 	if err := srv.Run(); err != nil {
