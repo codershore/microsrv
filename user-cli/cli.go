@@ -7,6 +7,7 @@ import (
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/config/cmd"
 	"log"
+	"os"
 
 	microclient "github.com/micro/go-micro/client"
 )
@@ -55,9 +56,17 @@ func main() {
 			}
 			log.Printf("Created: %s", r.User.Id)
 
-			getAll, err := client.GetAll
-
-		})
-
-		)
+			getAll, err := client.GetAll(context.Background(), &pbUser.Request{})
+			if err != nil {
+				log.Fatalf("Cloud not list users: %v", err)
+			}
+			for _, v := range getAll.Users {
+				log.Println(v)
+			}
+			os.Exit(0)
+		}),
+	)
+	if err := service.Run(); err != nil {
+		log.Println(err)
+	}
 }

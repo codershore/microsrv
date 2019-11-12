@@ -4,7 +4,7 @@ import (
 	pbUser "github.com/codershore/microsrv/user-service/proto/user"
 	"github.com/jinzhu/gorm"
 )
-type Reposityory interface {
+type Repository interface {
 
 	GetAll() ([]*pbUser.User, error)
 	Get(id string) (*pbUser.User, error)
@@ -44,4 +44,5 @@ func (repo *UserRepository) Create(user *pbUser.User) error {
 	if err := repo.db.Create(user).Error; err != nil {
 		return err
 	}
+	return nil
 }
